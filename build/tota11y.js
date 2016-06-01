@@ -10497,10 +10497,12 @@
 	        // new LandmarksPlugin(),
 	    ],
 
-	    experimental: [new A11yTextWand(), new Crowdsourcer(),
-	    // new LabelsPlugin(),
-	    new LandmarksPlugin()]
+	    experimental: [new A11yTextWand()]
 	};
+
+	// new Crowdsourcer(),
+	// new LabelsPlugin(),
+	// new LandmarksPlugin(),
 
 /***/ },
 /* 10 */
@@ -11143,7 +11145,7 @@
 	                        });
 
 	                        // Expand the first violation
-	                        if (prop.title !== "box model" && prop.title !== "position") {
+	                        if (prop.title !== "visual" && prop.title !== "position" && prop.title !== "box model") {
 	                            $desc.toggleClass(COLLAPSED_CLASS_NAME);
 	                            $trigger.toggleClass(COLLAPSED_CLASS_NAME);
 	                        }
@@ -29531,7 +29533,7 @@
 	            // highlighting and clicking will only work on:
 	            // div, section, article, aside, nav, header,
 	            // footer, and menu elements
-	            var CONTAINERS = ["div", "section", "article", "aside", "nav", "header", "footer", "menu", "li"];
+	            var CONTAINERS = ["body", "div", "section", "article", "aside", "nav", "header", "footer", "menu", "li", "ul", "ol"];
 
 	            // Mousemove handler controls highlighting behavior
 	            $(document).on("mousemove.wand", function (e) {
@@ -29554,7 +29556,7 @@
 	            // Click handler gets and displays CSS information
 	            $(document).on("click", ".tota11y-outlined", function (e) {
 
-	                // Prevent default if we clicked the application
+	                // Prevent default if we didn't click the application
 	                var isApp = this.className.indexOf("tota11y") !== -1;
 	                var hasOutline = this.className.indexOf("tota11y-outlined") !== -1;
 
@@ -29562,6 +29564,7 @@
 	                if (!hasOutline) {
 	                    return true;
 	                } else {
+	                    e.preventDefault();
 	                    e.stopPropagation();
 	                }
 
@@ -29577,7 +29580,7 @@
 	                $highlight = annotate.highlight($el);
 
 	                var partition = el2Partition(clickedEl);
-	                var propTypeOrder = ["position", "box_model", "typography", "visual", "misc"];
+	                var propTypeOrder = ["visual", "box_model", "position", "typography", "misc"];
 
 	                // Iterate over partition classes in the above order.
 	                // For each, we create the Handlebars ul,
@@ -29685,6 +29688,7 @@
 
 	var _ = __webpack_require__(/*! lodash */ 36);
 	var spec = __webpack_require__(/*! ./cssPropTypes */ 44);
+	// const shorten = require("shrthnd");
 
 	/**
 	 * Return an element's non-inherited computedStyles
@@ -29767,6 +29771,7 @@
 	function el2Partition(el) {
 	    var elStyles = getOwnComputedStyles(el);
 	    var partition = filterCss(elStyles);
+	    console.log(partition);
 	    return partition;
 	}
 
