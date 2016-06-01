@@ -19,7 +19,7 @@ class Crowdsourcer extends Plugin {
     }
 
     getDescription() {
-        return "Tag the components on the page";
+        return "Tag components on the page";
     }
 
     // Takes an object of properties,
@@ -33,12 +33,12 @@ class Crowdsourcer extends Plugin {
 
     run() {
         const that = this;
-        let count = 0;
         let $highlights = [];
-        let selections = [];
+        let count = 0;
+        let $selections = [];
 
         // Provide a fake summary to force the info panel to render
-        this.summary("Click on all the elements that form major layout components of the page");
+        this.summary("Select components of the layout");
 
         // When CONTAINERS_ONLY is active,
         // highlighting and clicking will only work on:
@@ -60,7 +60,7 @@ class Crowdsourcer extends Plugin {
         $(document).on("mousemove.wand", function(e) {
             const currentEl = document.elementFromPoint(e.clientX, e.clientY);
             const tag = _.toLower(currentEl.tagName);
-            const CONTAINERS_ONLY = true;  // for crowdsourcing
+            const CONTAINERS_ONLY = true;
 
             // Don't outline something if it's part of the app,
             // or not a container element when CONTAINERS_ONLY is true
@@ -72,13 +72,16 @@ class Crowdsourcer extends Plugin {
 
             // Outline the element currently being hovered over
             if (!invalidTarget) {
-                $(".tota11y-outlined").removeClass("tota11y-outlined");
-                $(currentEl).addClass("tota11y-outlined");
+                const old = ".tota11y-outlined-" + (count > 0 ? count - 1 : 0).toString();
+                const current = "tota11y-outlined-" + count.toString();
+                $(old).removeClass(old.substr(1));
+                $(currentEl).addClass(current);
+                console.log(currentEl);
             }
         });
 
         // Click handler gets and displays CSS information
-        $(document).on("click", ".tota11y-outlined", function(e) {
+        $(document).on("click", function(e) {
 
             // Prevent default if we clicked the application
             const isApp = this.className.indexOf("tota11y") !== -1;
@@ -96,9 +99,8 @@ class Crowdsourcer extends Plugin {
             const $el = $(clickedEl);
             console.log(clickedEl);
 
-
             // Send info to panel
-            selections.push({
+            $selections.push({
                 node: $el,
                 tag: clickedEl.tagName,
                 classList: clickedEl.classList,
@@ -108,6 +110,7 @@ class Crowdsourcer extends Plugin {
             // Control highlighting
             $highlights.push(annotate.highlight($el, count));
             count += 1;
+            console.log(count);
 
             // Partition the style properties
             const partition = el2Partition(clickedEl);

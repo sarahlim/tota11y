@@ -33,7 +33,7 @@ class A11yTextWand extends Plugin {
 
     run() {
         const that = this;
-        let $highlight, $label;
+        let $highlight;
 
         // Provide a fake summary to force the info panel to render
         // this.summary(" ");
@@ -72,6 +72,7 @@ class A11yTextWand extends Plugin {
             if (!invalidTarget) {
                 $(".tota11y-outlined").removeClass("tota11y-outlined");
                 $(currentEl).addClass("tota11y-outlined");
+                // console.log(currentEl);
             }
         });
 
@@ -85,35 +86,21 @@ class A11yTextWand extends Plugin {
             // Continue iff the element is outlined
             if (!hasOutline) {
                 return true;
+            } else {
+                e.stopPropagation();
             }
-
-            e.stopPropagation();
 
             // After we stop propagating, set clickedEl
             const clickedEl = this;
             const $el = $(clickedEl);
             console.log(clickedEl);
 
-            if ($label) {
-                $label.remove();
-            }
-            $label = annotate.label($el);
-
-            // Send info to panel
-            that.nodeInfo({
-                tag: clickedEl.tagName,
-                classList: clickedEl.classList,
-                id: clickedEl.id,
-            });
-
             // Control highlighting
             if ($highlight) {
                 $highlight.remove();
-                $(".tota11y-highlight").remove();
             }
             $highlight = annotate.highlight($el);
 
-            // Partition the style properties
             const partition = el2Partition(clickedEl);
             const propTypeOrder = [
                 "position",
@@ -132,10 +119,34 @@ class A11yTextWand extends Plugin {
             propTypeOrder.forEach(function (type) {
                 const props = partition[type];
                 if (Object.keys(props).length > 0) {
-                    const title = type.replace("_", " ");
+                    const title = type.replace("_", " ");  // TODO: change this
 
                     // Evaluate the prop list template
                     let $list = $(this.propList(props));
+
+                    const prediction = {"2":["overflow","display","min-height","background-color","text-align","margin-left","width","left","height","position","margin-bottom","bottom","min-width","text-indent","margin","vertical-align","top","margin-top","right","margin-right","z-index"],"3":["background-size","background-attachment","background-position","background","background-repeat","background-image"]};
+
+                    // Add "priority: med"
+                    prediction["2"].forEach(function (propName) {
+                        $list.find("li").each(function (index) {
+                            const txt = $(this).find(".style-list-property").text().slice(0, -1);
+                            if (prediction["2"].indexOf(txt) !== -1) {
+                                $(this).addClass("priority-med");
+                                console.log($(this));
+                            }
+                        });
+                    });
+
+                    // Add "priority: high"
+                    prediction["3"].forEach(function (propName) {
+                        $list.find("li").each(function (index) {
+                            const txt = $(this).find(".style-list-property").text().slice(0, -1);
+                            if (prediction["3"].indexOf(txt) !== -1) {
+                                $(this).addClass("priority-high");
+                            }
+                        });
+                    });
+
                     const propObj = { title, $list, $el };
                     propObjList.push(propObj);
                 }

@@ -75,7 +75,6 @@ class InfoPanel {
 
     setNodeInfo(selectors) {
         this.nodeInfo = selectors;
-        console.log(this.nodeInfo);
         return selectors;
     }
 
@@ -342,7 +341,6 @@ class InfoPanel {
                 });
 
                 // Expand the first violation
-                console.log(prop.title);
                 if (prop.title !== "box model" && prop.title !== "position") {
                     $desc.toggleClass(COLLAPSED_CLASS_NAME);
                     $trigger.toggleClass(COLLAPSED_CLASS_NAME);
