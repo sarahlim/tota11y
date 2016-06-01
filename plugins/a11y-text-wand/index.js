@@ -126,16 +126,16 @@ class A11yTextWand extends Plugin {
 
                     const prediction = {"2":["overflow","display","min-height","background-color","text-align","margin-left","width","left","height","position","margin-bottom","bottom","min-width","text-indent","margin","vertical-align","top","margin-top","right","margin-right","z-index"],"3":["background-size","background-attachment","background-position","background","background-repeat","background-image"]};
 
-                    // Add "priority: med"
-                    prediction["2"].forEach(function (propName) {
-                        $list.find("li").each(function (index) {
-                            const txt = $(this).find(".style-list-property").text().slice(0, -1);
-                            if (prediction["2"].indexOf(txt) !== -1) {
-                                $(this).addClass("priority-med");
-                                console.log($(this));
-                            }
-                        });
-                    });
+                    // // Add "priority: med"
+                    // prediction["2"].forEach(function (propName) {
+                    //     $list.find("li").each(function (index) {
+                    //         const txt = $(this).find(".style-list-property").text().slice(0, -1);
+                    //         if (prediction["2"].indexOf(txt) !== -1) {
+                    //             $(this).addClass("priority-med");
+                    //             console.log($(this));
+                    //         }
+                    //     });
+                    // });
 
                     // Add "priority: high"
                     prediction["3"].forEach(function (propName) {
